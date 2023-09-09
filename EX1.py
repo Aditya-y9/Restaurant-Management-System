@@ -1,7 +1,17 @@
 # very basic python revision.
 # string methods
 
-s = "Aditya is very kind."
+# match case is very similar to switch case.
+
+s = "A"
+match s:
+    case "A":
+        print("Aditya revised!")
+# range(start, end, step)
+for i in range(0, 10, 2):
+    print(i)
+
+
 
 
 
