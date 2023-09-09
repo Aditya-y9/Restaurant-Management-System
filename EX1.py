@@ -1,4 +1,12 @@
 # very basic python revision.
+# string methods
+
+s = "Aditya is very kind."
+
+
+
+
+
 # pip to install libraries(eg pygame,tensorflow,scilearn)
 # modules are code written by else which we can use
 
