@@ -1,3 +1,4 @@
+# very basic python revision.
 # pip to install libraries(eg pygame,tensorflow,scilearn)
 # modules are code written by else which we can use
 
