@@ -44,7 +44,7 @@ def openfile():
 def check_if_empty(content):
     '''
     This function checks if the file is empty or not.
-    return: None
+    return: Output message
     '''
     # content is empty
     if len(content) == 0:
@@ -65,6 +65,7 @@ def no_of_lines(lines):
 def no_of_words(content):
     '''
     This function returns the number of words in the file.
+    return: modified content
     '''
     # split the content by spaces and count the number of words
     # it will be list of words
@@ -83,6 +84,7 @@ def no_of_words(content):
 def no_of_characters(content):
     '''
     This function returns the number of characters in the file.
+    return: number of characters
     '''
     # to ignore the whitespaces
     content = "".join(content.split(" "))
@@ -94,6 +96,7 @@ def no_of_characters(content):
 def no_of_unique_words(content):
     '''
     This function returns the number of unique words in the file.
+    return: number of unique words
     '''
     # split the content by spaces and count the number of words
     total_words = no_of_words(content)
@@ -109,6 +112,7 @@ def no_of_unique_words(content):
 def five_most_frequent_words(content):
     '''
     This function returns the five most frequent words in the file.
+    return: five most frequent words
     '''
     # a dictionary to store the frequency of each word
     # {key: value}
@@ -222,9 +226,11 @@ def main():
             elif choice == 5:
                 print("Number of unique words in the file: ", len(no_of_unique_words(content)))
             elif choice == 6:
-                print("Five most frequent words in the file: ", five_most_frequent_words(content))
+                for word, freq in five_most_frequent_words(content):
+                    print(word, ":", freq)
             elif choice == 7:
-                print("Five least frequent words in the file: ", five_least_frequent_words(content))
+                for word, freq in five_least_frequent_words(content):
+                    print(word, ":", freq)
             elif choice == 8:
                 result = capitalize(lines)
                 print("Capitalized lines: ")
