@@ -4,6 +4,7 @@ base_path = r"C:\Users\MSHOME\Desktop\Newfolder\Python\PD_LAB\\"
 # @Author: Aditya Yedurkar
 # @Date: 2023-11-18
 
+
 def openfile():
     '''
     This function opens the file and returns the lines of the file.
@@ -27,13 +28,14 @@ def openfile():
 
             # return the lines of the file
             return lines
-        
+
         # if file does not exist
-        except(FileNotFoundError):
+        except (FileNotFoundError):
             print("Specified File not found at the given path. Please try again.")
         # if user does not have the required permission to access the file
-        except(PermissionError):
-            print("You do not have the required permission to access this file. Please try again.")
+        except (PermissionError):
+            print(
+                "You do not have the required permission to access this file. Please try again.")
 
         # catching other general exceptions
         except:
@@ -53,6 +55,8 @@ def check_if_empty(content):
         return "File is not empty."
 
 # lenght of lines
+
+
 def no_of_lines(lines):
     '''
     This function returns the number of lines in the file.
@@ -71,10 +75,10 @@ def no_of_words(content):
     # it will be list of words
     # output its length
     for i in content:
-    # to ignore the new line characters
-    # replace the new line character with space
-    # so that the words split properly
-    # we standardize the splitting criteria by replacing all the newlines with space
+        # to ignore the new line characters
+        # replace the new line character with space
+        # so that the words split properly
+        # we standardize the splitting criteria by replacing all the newlines with space
         if i == "\n":
             content = content.replace(i, " ")
     content = content.split(" ")
@@ -200,19 +204,17 @@ def main():
     print("lines: ", lines)
     print("content: ", content)
 
-
-
     while True:
         print("<------------------MENU------------------------------------------------------------------------------------------------------------------------------>")
         print("1. Check if file is empty.\n"
-        "2. Number of lines in the file.\n"
-        "3. Number of words in the file.\n"
-        "4. Number of characters in the file.\n"
-        "5. Number of unique words in the file.\n"
-        "6. Five most frequent words in the file.\n"
-        "7. Five least frequent words in the file.\n"
-        "8. Capitalize the first and last letter of each line.\n"
-        "9. Exit.")
+              "2. Number of lines in the file.\n"
+              "3. Number of words in the file.\n"
+              "4. Number of characters in the file.\n"
+              "5. Number of unique words in the file.\n"
+              "6. Five most frequent words in the file.\n"
+              "7. Five least frequent words in the file.\n"
+              "8. Capitalize the first and last letter of each line.\n"
+              "9. Exit.")
         try:
             choice = int(input("Enter your choice: "))
             if choice == 1:
@@ -220,11 +222,14 @@ def main():
             elif choice == 2:
                 print("Number of lines in the file: ", no_of_lines(lines))
             elif choice == 3:
-                print("Number of words in the file: ", len(no_of_words(content)))
+                print("Number of words in the file: ",
+                      len(no_of_words(content)))
             elif choice == 4:
-                print("Number of characters in the file: ", no_of_characters(content))
+                print("Number of characters in the file: ",
+                      no_of_characters(content))
             elif choice == 5:
-                print("Number of unique words in the file: ", len(no_of_unique_words(content)))
+                print("Number of unique words in the file: ",
+                      len(no_of_unique_words(content)))
             elif choice == 6:
                 for word, freq in five_most_frequent_words(content):
                     print(word, ":", freq)
@@ -242,7 +247,7 @@ def main():
                 exit()
             else:
                 print("Invalid choice. Please try again.")
-        except(ValueError):
+        except (ValueError):
             print("Invalid choice. Please try again")
         # except:
         #     print("An error occurred. Please try again.")
