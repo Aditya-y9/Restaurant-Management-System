@@ -28,11 +28,14 @@ def openfile():
             # return the lines of the file
             return lines
         
+        # if file does not exist
         except(FileNotFoundError):
             print("Specified File not found at the given path. Please try again.")
+        # if user does not have the required permission to access the file
         except(PermissionError):
             print("You do not have the required permission to access this file. Please try again.")
-        # catching general exceptions
+
+        # catching other general exceptions
         except:
             print("An error occurred. Please try again.")
 
@@ -186,16 +189,18 @@ def capitalize(lines):
 
 def main():
     lines = openfile()  # Read the lines from the file
+
+    # content is a string made by joining the line list together
     content = "".join(lines)
-    file = open(base_path + "aditya.txt", "r")
-    content1 = file.read()
-    print(content1)
-    # Read the content from the lines
 
     print("lines: ", lines)
     print("content: ", content)
 
-    print("1. Check if file is empty.\n"
+
+
+    while True:
+        print("<------------------MENU------------------------------------------------------------------------------------------------------------------------------>")
+        print("1. Check if file is empty.\n"
         "2. Number of lines in the file.\n"
         "3. Number of words in the file.\n"
         "4. Number of characters in the file.\n"
@@ -204,8 +209,6 @@ def main():
         "7. Five least frequent words in the file.\n"
         "8. Capitalize the first and last letter of each line.\n"
         "9. Exit.")
-
-    while True:
         try:
             choice = int(input("Enter your choice: "))
             if choice == 1:
