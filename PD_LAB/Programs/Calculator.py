@@ -1,5 +1,5 @@
 import tkinter as tk
-from fontTools.cffLib import width
+import math
 
 
 # to create a window
@@ -9,7 +9,7 @@ root = tk.Tk()
 root.title("PD LAB")
 
 # to set the size of the window (fixed)
-root.geometry("570x600+100+200")
+root.geometry("850x600+100+200")
 
 # resizable h?
 root.resizable(False, False)
@@ -19,6 +19,73 @@ root.configure(bg="#2A2D36")
 
 
 equation = ""
+
+def sin():
+    global equation
+    # to update the equation in the string
+    eq = equation
+    clear()
+    equation += "math.sin(" + str(float(eq)*math.pi/180) + ")"
+    label_result.configure(text=equation.replace("math.",""))
+
+def cos():
+    global equation
+    # to update the equation in the string
+    eq = equation
+    clear()
+    equation += "math.cos(" + str(float(eq)*math.pi/180) + ")"
+    label_result.configure(text=equation.replace("math.",""))
+
+def tan():
+    global equation
+    # to update the equation in the string
+    eq = equation
+    clear()
+    equation += "math.tan(" + str(float(eq)*math.pi/180) + ")"
+    label_result.configure(text=equation.replace("math.",""))
+
+def erase():
+    global equation
+    equation = equation[:-1]
+    label_result.configure(text=equation)
+
+
+def sqrt():
+    global equation
+    # to update the equation in the string
+    equation += "math.sqrt("
+
+    # to update the equation in the label
+    label_result.configure(text=equation.replace("math.sqrt","√"))
+
+def square():
+    global equation
+    # to update the equation in the string
+    equation += "**2"
+
+    # to update the equation in the label
+    label_result.configure(text=equation.replace("**2","²"))
+
+
+def power():
+    global equation
+    # to update the equation in the string
+    equation += "**"
+
+    # to update the equation in the label
+    label_result.configure(text=equation.replace("**","^"))
+
+def fact():
+    # assign to global var
+    global equation
+
+    # to update the equation in the string
+    equation += "math.factorial("
+
+    # to update the equation in the label each time
+    label_result.configure(text=equation.replace("math.factorial","!"))
+
+
 
 def show(value):
     global equation
@@ -55,7 +122,7 @@ def calculate():
     label_result.configure(text=result)
 
 # to create a label for the result of the calculation
-label_result = tk.Label(root, width=40, height=2, font=("Arial", 20))
+label_result = tk.Label(root, width=40, height=2, font=("Arial", 20),fg="#47f507",bg="black")
 label_result.pack()
 
 # to create Buttons
@@ -81,5 +148,17 @@ tk.Button(root,text="0",width=11,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2
 
 tk.Button(root,text=".",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="#f80",command=lambda:show(".")).place(x=290,y=500)
 tk.Button(root,text="=",width=5,height=3,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : calculate()).place(x=430,y=400)
+
+tk.Button(root,text="(",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : show("(")).place(x=570,y=100)
+tk.Button(root,text=")",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : show(")")).place(x=570,y=200)
+
+tk.Button(root,text="sin",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : sin("sin(")).place(x=570,y=300)
+tk.Button(root,text="cos",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : cos("cos(")).place(x=570,y=400)
+tk.Button(root,text="tan",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : tan()).place(x=570,y=500)
+
+tk.Button(root,text="DEL",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : erase()).place(x=710,y=100)
+tk.Button(root,text="√",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : sqrt()).place(x=710,y=200)
+tk.Button(root,text="²",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : square()).place(x=710,y=300)
+tk.Button(root,text="^",width=5,height=1,font=("Arial",30,"bold"),bd=1,fg="#2A2D36",bg="blue",command=lambda : power()).place(x=710,y=400)
 
 root.mainloop()
