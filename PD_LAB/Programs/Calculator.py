@@ -3,13 +3,16 @@ import math
 
 
 # to create a window
+# root window
 root = tk.Tk()
 
 # to set the title of the window
 root.title("PD LAB")
 
 # to set the size of the window (fixed)
-root.geometry("850x600+100+200")
+
+# geometry("width x height + X_POS + Y_POS")
+root.geometry("850x600+200+25")
 
 # resizable h?
 root.resizable(False, False)
@@ -17,7 +20,7 @@ root.resizable(False, False)
 # to set the background color of the window
 root.configure(bg="#2A2D36")
 
-
+# init screen empty
 equation = ""
 
 def sin():
@@ -99,8 +102,6 @@ def clear():
     global equation
     # reset the equation string
     equation = ""
-
-    # empty the label
     label_result.configure(text=equation)
 
 def calculate():
@@ -122,7 +123,7 @@ def calculate():
     label_result.configure(text=result)
 
 # to create a label for the result of the calculation
-label_result = tk.Label(root, width=40, height=2, font=("Arial", 20),fg="#47f507",bg="black")
+label_result = tk.Label(root, width=40, height=2, font=("Arial", 20),fg="#47f507",bg="black",border=10,borderwidth=10,relief="sunken")
 label_result.pack()
 
 # to create Buttons
