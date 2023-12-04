@@ -1,5 +1,6 @@
 import math
 
+
 equation = ""
 
 
@@ -91,7 +92,3 @@ def fact():
     global equation
     equation = "math.factorial(" + equation + ")"
     return equation.replace("math.factorial(","").replace(")","!")
-
-
-
-
