@@ -93,3 +93,5 @@ def fact():
     return equation.replace("math.factorial(","").replace(")","!")
 
 
+
+

@@ -14,58 +14,13 @@ root.resizable(False,False)
 
 root.configure(bg="#2B2D60",border=20,bd=20,relief="sunken")
 
-def clear():
-    result_label.configure(text=Calc.clear())
-
-def show(value):
-    result_label.configure(text=Calc.show(value))
-
-def calculate():
-    result_label.configure(text=Calc.calculate())
-
-def sin():
-    result_label.configure(text=Calc.sin())
-
-def cos():
-    result_label.configure(text=Calc.cos())
-
-def tan():
-    result_label.configure(text=Calc.tan())
-
-def sqrt():
-    result_label.configure(text=Calc.sqrt())
-
-def modulo():
-    result_label.configure(text=Calc.mod())
-
-
-def mod():
-    result_label.configure(text=Calc.mod())
-
-def exp():
-    result_label.configure(text=Calc.exp())
-
-def power():
-    result_label.configure(text=Calc.power())
-
-def inverse():
-    result_label.configure(text=Calc.inverse())
-
-def log10():
-    result_label.configure(text=Calc.log10())
-
-def loge():
-    result_label.configure(text=Calc.log())
-
-def fact():
-    result_label.configure(text=Calc.fact())
 
 try:
 
     result_label = tk.Label(root,fg="green",bg="black",width=120,height=2,border=10,bd=10,relief="sunken",font=("Ariel",20,"bold"))
     result_label.pack()
             
-    tk.Button(fg="black",bg="#f80",width=5,height=2,border=1,bd=2,command=lambda:clear(),text="C",font=("Ariel",20,"bold")).place(x=10,y=120)
+    tk.Button(fg="black",bg="#f80",width=5,height=2,border=1,bd=2,command=lambda:get(),text="C",font=("Ariel",20,"bold")).place(x=10,y=120)
 
     tk.Button(fg="black",bg="#f80",width=5,height=2,border=1,bd=2,command=lambda:show("1"),text="1",font=("Ariel",20,"bold")).place(x=120,y=120)
     tk.Button(fg="black",bg="#f80",width=5,height=2,border=1,bd=2,command=lambda:show("2"),text="2",font=("Ariel",20,"bold")).place(x=230,y=120)
