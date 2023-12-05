@@ -92,3 +92,13 @@ def fact():
     global equation
     equation = "math.factorial(" + equation + ")"
     return equation.replace("math.factorial(","").replace(")","!")
+
+def pi():
+    global equation
+    equation += "math.pi"
+    return equation.replace("math.pi","π")
+
+def power10():
+    global equation
+    equation += "10**"
+    return equation
