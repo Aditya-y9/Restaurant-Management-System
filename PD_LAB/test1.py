@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import sqlite3
 from datetime import datetime
 import matplotlib.pyplot as plt
@@ -28,6 +28,7 @@ class RestaurantManagementSystem:
             CREATE TABLE IF NOT EXISTS menu (
                 item_id INTEGER PRIMARY KEY,
                 item_name TEXT UNIQUE,
+                item_quantity INTEGER DEFAULT 0,
                 item_price REAL
             )
         ''')
@@ -52,10 +53,12 @@ class RestaurantManagementSystem:
         self.conn.commit()
 
     def create_menu_dropdown(self):
-        menu_frame = tk.Frame(self.root)
+        menu_frame = tk.Frame(self.root, width=20)
         menu_frame.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
 
         self.menu_var = tk.StringVar()
+        menu = tk.Label(text="Restaurant Menu : ", fg="black")
+        menu.place(x=10, y=20)
         self.menu_dropdown = ttk.Combobox(menu_frame, textvariable=self.menu_var, state="readonly")
         self.menu_dropdown.grid(row=0, column=0, padx=5)
 
@@ -64,15 +67,18 @@ class RestaurantManagementSystem:
     def update_menu_dropdown(self):
         self.cursor.execute('SELECT item_name FROM menu')
         menu_items = [item[0] for item in self.cursor.fetchall()]
-        self.menu_var.set('')  
+        self.menu_var.set('')
         self.menu_dropdown['values'] = menu_items
 
     def create_quantity_slider(self):
         slider_frame = tk.Frame(self.root)
         slider_frame.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
-
+        quantity = tk.Label(text="Quantity", fg="black")
+        quantity.place(x=170, y=20)
         self.quantity_var = tk.IntVar()
-        quantity_slider = tk.Scale(slider_frame, from_=1, to=10, orient=tk.HORIZONTAL, variable=self.quantity_var, label="Quantity")
+        quantity_slider = tk.Spinbox(self.root, from_=1, to=100, width=4, increment=1,
+                                     textvariable=self.quantity_var, font=("Arial", 20))
+
         quantity_slider.grid(row=0, column=0, padx=5)
 
     def create_add_button(self):
@@ -102,14 +108,14 @@ class RestaurantManagementSystem:
         payment_dropdown.grid(row=3, column=1, pady=5)
 
         tk.Label(order_info_frame, text="Staged Items").grid(row=4, column=0, columnspan=2, pady=10)
-
-        self.staged_items_listbox = tk.Listbox(order_info_frame, selectmode=tk.SINGLE, height=30, width=80)
+        entry = tk.Label(text=(""))
+        self.staged_items_listbox = tk.Listbox(order_info_frame, selectmode=tk.SINGLE, font=("Arial", 35))
         self.staged_items_listbox.grid(row=5, column=0, columnspan=2, pady=5)
 
-        tk.Label(order_info_frame, text="Item Name").grid(row=6, column=0, padx=5)
-        tk.Label(order_info_frame, text="ID").grid(row=6, column=1, padx=5)
-        tk.Label(order_info_frame, text="Price").grid(row=6, column=2, padx=5)
-        tk.Label(order_info_frame, text="Quantity").grid(row=6, column=3, padx=5)
+        tk.Label(order_info_frame, text="Item Name").grid(row=4, column=0, padx=5)
+        tk.Label(order_info_frame, text="ID").grid(row=4, column=1, padx=5)
+        tk.Label(order_info_frame, text="Price").grid(row=4, column=2, padx=5)
+        tk.Label(order_info_frame, text="Quantity").grid(row=4, column=3, padx=5)
 
         update_button = tk.Button(order_info_frame, text="Update Order", command=self.update_order)
         update_button.grid(row=7, column=0, columnspan=2, pady=10)
@@ -131,18 +137,21 @@ class RestaurantManagementSystem:
         self.update_pie_chart()
 
     def add_to_order(self):
-        menu_item = self.menu_var.get()
-        quantity = self.quantity_var.get()
+        item_name = self.menu_var.get()
+        item_quantity = self.quantity_var.get()
 
-        if menu_item and quantity > 0:
-            self.cursor.execute('SELECT item_id, item_price FROM menu WHERE item_name = ?', (menu_item,))
-            item_details = self.cursor.fetchone()
+        if item_name and item_quantity > 0:
+            self.cursor.execute('SELECT item_id, item_price, item_quantity FROM menu WHERE item_name = ?', (item_name,))
+            item_id, item_price, remaining_quantity = self.cursor.fetchone()
 
-            if item_details:
-                item_id, item_price = item_details
-                self.staged_items_listbox.insert(tk.END, (menu_item, item_id, item_price, quantity))
-                self.update_pie_chart()
-                self.update_total_labels()
+            if item_quantity > remaining_quantity:
+                messagebox.showerror("Error", "Not enough quantity in stock.")
+                return
+
+            self.staged_items_listbox.insert(tk.END, (item_name, item_id, item_price, item_quantity))
+
+            self.update_pie_chart()
+            self.update_total_labels()
 
     def update_order(self):
         table_number = self.table_number_var.get()
@@ -162,6 +171,10 @@ class RestaurantManagementSystem:
                 self.cursor.execute('INSERT INTO order_items (order_id, item_id, quantity) VALUES (?, ?, ?)',
                                     (order_id, item_id, quantity))
 
+                # Update the quantity in the inventory table
+                self.cursor.execute('UPDATE menu SET item_quantity = item_quantity - ? WHERE item_id = ?',
+                                    (quantity, item_id))
+
             self.conn.commit()
 
             self.staged_items_listbox.delete(0, tk.END)
@@ -169,36 +182,23 @@ class RestaurantManagementSystem:
             self.update_total_labels()
 
     def update_pie_chart(self):
-        self.cursor.execute('''
-            SELECT menu.item_name, SUM(order_items.quantity) 
-            FROM menu 
-            JOIN order_items ON menu.item_id = order_items.item_id 
-            GROUP BY menu.item_name
-        ''')
-        data = self.cursor.fetchall()
+        self.cursor.execute('SELECT item_name, item_quantity FROM menu')
+        menu_items = self.cursor.fetchall()
 
-        labels = [item[0] for item in data]
-        quantities = [item[1] for item in data]
+        if not menu_items:
+            return
+
+        labels = [item[0] for item in menu_items]
+        sizes = [item[1] for item in menu_items]
 
         self.ax.clear()
-        self.ax.pie(quantities, labels=labels, autopct='%1.1f%%', startangle=90)
-        self.pie_chart_canvas.draw()
-
-    def update_total_labels(self):
-        total_items = 0
-        total_price = 0.0
-
-        for item in self.staged_items_listbox.get(0, tk.END):
-            _, _, item_price, quantity = item
-            total_items += quantity
-            total_price += item_price * quantity
-
-        self.total_items_label.config(text=f"Total Items: {total_items}")
-        self.total_price_label.config(text=f"Total Price: ${total_price:.2f}")
+        self.ax.pie(sizes, labels=labels, autopct="%1.1f%%")
+        self.ax.axis('equal')
+        self.figure.canvas.draw()
 
     def create_inventory_section(self):
         inventory_frame = tk.Frame(self.root)
-        inventory_frame.grid(row=0, column=5, rowspan=5, padx=10, pady=10, sticky=tk.W)
+        inventory_frame.grid(row=4, column=5, rowspan=5, padx=10, pady=10, sticky=tk.W)
 
         tk.Label(inventory_frame, text="Add to Inventory").grid(row=0, column=0, columnspan=2, pady=10)
 
@@ -221,15 +221,33 @@ class RestaurantManagementSystem:
         add_to_inventory_button.grid(row=4, column=5, columnspan=2, pady=10)
 
     def add_to_inventory(self):
-        new_item_name = self.new_item_name_var.get()
-        new_item_price = self.new_item_price_var.get()
-        new_item_quantity = self.new_item_quantity_var.get()
+        item_name = self.new_item_name_var.get()
+        item_price = self.new_item_price_var.get()
+        item_quantity = self.new_item_quantity_var.get()
 
-        if new_item_name and new_item_price and new_item_quantity > 0:
-            self.cursor.execute('INSERT OR IGNORE INTO menu (item_name, item_price) VALUES (?, ?)', (new_item_name, new_item_price))
+        if item_name and item_price and item_quantity:
+            self.cursor.execute('INSERT INTO menu (item_name, item_price, item_quantity) VALUES (?, ?, ?)',
+                                (item_name, item_price, item_quantity))
             self.conn.commit()
 
+            self.new_item_name_var.set('')
+            self.new_item_price_var.set(0.0)
+            self.new_item_quantity_var.set(0)
+
             self.update_menu_dropdown()
+            self.update_pie_chart()
+
+    def update_total_labels(self):
+        total_items = 0
+        total_price = 0.0
+
+        for item in self.staged_items_listbox.get(0, tk.END):
+            _, _, item_price, quantity = item
+            total_items += quantity
+            total_price += item_price * quantity
+
+        self.total_items_label.config(text=f"Total Items: {total_items}")
+        self.total_price_label.config(text=f"Total Price: ${total_price:.2f}")
 
     def run(self):
         self.root.mainloop()

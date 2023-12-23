@@ -2,6 +2,7 @@ import tkinter as tk
 import Calc
 from tkinter import ttk
 from tkinter import messagebox as mb
+import webbrowser
 
 
 root = tk.Tk()
@@ -16,6 +17,9 @@ root.resizable(False,False)
 root.iconphoto(False,tk.PhotoImage(file=r"C:\Users\MSHOME\Desktop\Newfolder\Python\PD_LAB\title1.png"))
 
 root.configure(bg="#2B2D60",border=20,bd=20,relief="sunken")
+
+def callback(url):
+    webbrowser.open_new_tab(url)
 
 def clear():
     result_label.configure(text=Calc.clear())
@@ -127,7 +131,7 @@ try:
     tk.Button(fg="black",bg="#f80",width=5,height=2,border=4,bd=4,command=lambda:fact(),text="!",font=("Ariel",20,"bold")).place(x=890,y=320)
 
     
-    tk.Button(fg="black",bg="#e83f71",width=10,height=1,border=4,bd=4,text="Made by AY",font=("Ariel",10,"bold")).place(x=780,y=440)
+    tk.Button(fg="black",bg="#e83f71",width=10,height=1,border=4,bd=4,text="Made by AY",font=("Ariel",10,"bold"),command=lambda:callback("https://github.com/Aditya-y9")).place(x=780,y=440)
 
     tk.Button(fg="black",bg="#f80",width=5,height=2,border=4,bd=4,command=lambda:power10(),text="10^",font=("Ariel",20,"bold")).place(x=890,y=420)
 except:

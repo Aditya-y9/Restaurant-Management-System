@@ -4,7 +4,6 @@ import math
 equation = ""
 
 
-
 def clear():
     global equation
     equation = ""
