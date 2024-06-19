@@ -1,8 +1,9 @@
 import tkinter as tk
-import Calc
+import Calculator.Calc as Calc
 from tkinter import ttk
 from tkinter import messagebox as mb
 import webbrowser
+from playsound import playsound
 
 
 root = tk.Tk()
@@ -14,7 +15,7 @@ root.title("Aditya Yedurkar's Calculator")
 
 root.resizable(False,False)
 
-root.iconphoto(False,tk.PhotoImage(file=r"C:\Users\MSHOME\Desktop\Newfolder\Python\PD_LAB\title1.png"))
+
 
 root.configure(bg="#2B2D60",border=20,bd=20,relief="sunken")
 
@@ -25,10 +26,20 @@ def clear():
     result_label.configure(text=Calc.clear())
 
 def show(value):
+    print("this value" + str(value))
+    val = value
+    if val == '13':
+        print("Playing music")
+        playsound('tera.wav')
     result_label.configure(text=Calc.show(value))
 
 def calculate():
-    result_label.configure(text=Calc.calculate())
+    val = Calc.calculate()
+    print("this val" + str(val))
+    if val == 13:
+        print("Playing music")
+        playsound('tera.wav')
+    result_label.configure(text=val)
 
 def sin():
     result_label.configure(text=Calc.sin())
